@@ -16,6 +16,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 velocity;
 
+    // debug
+    private float prevHeight = 0f;
+
     void Start()
     {
         
@@ -43,5 +46,12 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+
+        if (prevHeight != controller.height) 
+        {
+            Debug.Log(controller.height);
+            prevHeight = controller.height;
+        }
+        
     }
 }
