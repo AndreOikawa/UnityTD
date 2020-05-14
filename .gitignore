@@ -1,0 +1,10 @@
+.vs/
+.vscode/
+Assembly-CSharp.csproj
+Library/
+Logs/
+Packages/
+ProjectSettings/
+TowerDefense.sln
+obj/
+*.meta
