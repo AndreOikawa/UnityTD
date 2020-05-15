@@ -49,7 +49,7 @@ CharacterController:
   m_Height: 4
   m_Radius: 1
   m_SlopeLimit: 45
-  m_StepOffset: 0.5
+  m_StepOffset: 0.01
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -68,11 +68,11 @@ MonoBehaviour:
   controller: {fileID: 1605610381310126209}
   groundCheck: {fileID: 1605610382418029457}
   groundDistance: 0.4
-  jumpHeight: 3
+  jumpHeight: 2
   groundMask:
     serializedVersion: 2
     m_Bits: 256
-  speed: 20
+  speed: 15
   gravity: -20
 --- !u!1 &1605610382418029458
 GameObject:
@@ -279,5 +279,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abd4e167daeed149adcbf422ffd70fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 500
+  sensitivity: 200
   playerBody: {fileID: 1605610381310126208}

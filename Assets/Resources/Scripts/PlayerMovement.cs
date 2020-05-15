@@ -10,14 +10,13 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHeight = 3f;
     public LayerMask groundMask;
     bool isGrounded;
-    public float speed = 20f;
+    public float speed = 10f;
     // Start is called before the first frame update
     public float gravity = -20f;
 
     private Vector3 velocity;
 
-    // debug
-    private float prevHeight = 0f;
+    
 
     void Start()
     {
@@ -27,9 +26,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && velocity.y < 0) {
+        if (isGrounded && velocity.y < -2f) {
             velocity.y = -2f;
         }
 
@@ -47,10 +47,10 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-        if (prevHeight != controller.height) 
-        {
-            Debug.Log(controller.height);
-            prevHeight = controller.height;
+        Debug.Log(velocity.y);
+        if (transform.position.y < -4f) {
+            Debug.Log("outofbounds" + transform.position.y);
+            transform.position = new Vector3(10,10,10);
         }
         
     }
