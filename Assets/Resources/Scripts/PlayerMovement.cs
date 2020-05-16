@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 10f;
     // Start is called before the first frame update
     public float gravity = -20f;
+    public float terminalVelocity = 20f;
+    public bool debug = false;
 
     private Vector3 velocity;
 
@@ -44,12 +46,16 @@ public class PlayerMovement : MonoBehaviour
         }
 
         velocity.y += gravity * Time.deltaTime;
-
+        if (Mathf.Abs(velocity.magnitude) > terminalVelocity) {
+            float scaleFactor = terminalVelocity/velocity.magnitude;
+            velocity *= scaleFactor;
+        }
         controller.Move(velocity * Time.deltaTime);
 
-        Debug.Log(velocity.y);
+        if (debug) Debug.Log(velocity.y);
+
         if (transform.position.y < -4f) {
-            Debug.Log("outofbounds" + transform.position.y);
+            if (debug) Debug.Log("outofbounds" + transform.position.y);
             transform.position = new Vector3(10,10,10);
         }
         

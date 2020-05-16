@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GenerateFloor : MonoBehaviour
 {
+    enum Top {
+        NOTHING,
+        PATH,
+        GROUND
+    }
     enum Side {
         NORTH,
         SOUTH,
@@ -15,18 +20,22 @@ public class GenerateFloor : MonoBehaviour
     public int length = 32;
     public int height = 3;
     public float scale = 1.01f;
-    private bool[,,] tiles;
+    public bool debug = false;
+    public GameObject waypointPrefab;
+    private Top[,,] tiles;
     private Texture tileTop;
     private Texture tileSide;
-    void Start()
+    private Texture tilePath;
+    void Awake()
     {
         PopulateTextures();
         GenerateTiles();
 
     }
     void PopulateTextures() {
-        tileTop = Resources.Load<Texture>("Materials/test1") as Texture;
-        tileSide = Resources.Load<Texture>("Materials/test") as Texture;
+        tileTop = Resources.Load<Texture>("Materials/GroundTop") as Texture;
+        tileSide = Resources.Load<Texture>("Materials/GroundSide") as Texture;
+        tilePath = Resources.Load<Texture>("Materials/GroudPath") as Texture;
     }
     void GenerateTiles() {
         CreateMap();
@@ -34,38 +43,81 @@ public class GenerateFloor : MonoBehaviour
     }
 
     void CreateMap() {
-        tiles = new bool[width, height, length];
+        tiles = new Top[width, height, length];
         // Vector3 tileScale = tilePrefab.transform.localScale;
         for (int x = 0; x < width; x++) {
             for (int z = 0; z < length; z++) {
                 int y = CalculateHeights(x, z);
-                // GenerateTop(x,y,z);
-                // GenerateSide(x,y,z);
-                for (; y >= 0; y--)
-                    tiles[x,y,z] = true;
+                if (y == height) y--;
+                // for (; y >= 0; y--)
+                    tiles[x,y,z] = Top.GROUND;
             }
         }
+
+        CreatePath();
     }
+
+    void CreatePath() {
+        int xStart = 1;
+        int zStart = 1;
+        int xEnd = width - 2;
+        int zEnd = length - 2;
+
+        int prevY = -1;
+        for (int x = xStart; x <= xEnd; x++) {
+            int y = HighestTop(x,zStart);
+            if (prevY != y) {
+                prevY = y;
+                CreateWaypoint(new Vector3Int(x,y + 1,zStart));
+            }
+            tiles[x,y,zStart] = Top.PATH;
+        }
+        for (int z = zStart; z <= zEnd; z++) {
+            int y = HighestTop(xEnd,z);
+
+            if (prevY != y) {
+                prevY = y;
+                CreateWaypoint(new Vector3Int(xEnd,y + 1,z));
+            }
+
+            tiles[xEnd,y,z] = Top.PATH;
+        }
+    }
+
+    void CreateWaypoint(Vector3Int pos) {
+        Instantiate(waypointPrefab, pos, Quaternion.identity);
+    }
+    int HighestTop(int x, int z) {
+        int y = height - 1;
+        for (; y >= 0; y--) {
+            if (tiles[x,y,z] != Top.NOTHING) {
+                if (debug) Debug.Log(y);
+                return y;
+            }
+        }
+        return y;
+    }
+
     void PaintTiles() {
-        for (int y = 2; y >= 0; y--) {
+        for (int y = height - 1; y >= 0; y--) {
             for (int x = 0; x < width; x++) {
                 for (int z = 0; z < length; z++) {
-                    if (tiles[x,y,z]) {
-                        GenerateTop(x,y,z);
+                    if (tiles[x,y,z] != Top.NOTHING) {
+                        GenerateTop(x,y,z, tiles[x,y,z]);
                         // east
-                        if (x > 0 && !tiles[x-1,y,z]) {
+                        if (x > 0 && tiles[x-1,y,z] == Top.NOTHING) {
                             GenerateSide(x,y,z, Side.EAST);
                         }
                         // west
-                        if (x < width - 1 && !tiles[x+1,y,z]) {
+                        if (x < width - 1 && tiles[x+1,y,z] == Top.NOTHING) {
                             GenerateSide(x,y,z, Side.WEST);
                         }
                         // north
-                        if (z > 0 && !tiles[x,y,z-1]) {
+                        if (z > 0 && tiles[x,y,z-1] == Top.NOTHING) {
                             GenerateSide(x,y,z, Side.NORTH);
                         }
                         // south
-                        if (z < length - 1 && !tiles[x,y,z+1]) {
+                        if (z < length - 1 && tiles[x,y,z+1] == Top.NOTHING) {
                             GenerateSide(x,y,z, Side.SOUTH);
                         }
                     }
@@ -74,44 +126,49 @@ public class GenerateFloor : MonoBehaviour
             }
         }
     }
-    void GenerateTop(int x, int y, int z) {
-        GameObject quad = GameObject.CreatePrimitive( PrimitiveType.Quad );
-                
-        quad.GetComponent<Renderer>().material.mainTexture = tileTop; 
-        quad.transform.localScale = new Vector3(tileDimensions,tileDimensions,1);
-        
-        quad.transform.Translate(x * tileDimensions, y * tileDimensions, z * tileDimensions);
-        quad.transform.Rotate(90,0,0, Space.Self);
-        quad.transform.parent = GameObject.Find("Tiles").transform;
-        quad.layer = 8;
+    void GenerateTop(int x, int y, int z, Top type) {
+        Vector3 newPos = new Vector3(x * tileDimensions, y * tileDimensions, z * tileDimensions);
+        Vector3 rotation = new Vector3(90,0,0);
+        Texture texture = tileTop;
+        if (type == Top.PATH) texture = tilePath;
+        CreateTile(newPos, rotation, texture, true);
     }
 
     void GenerateSide(int x, int y, int z, Side side) {
-        GameObject quad = GameObject.CreatePrimitive( PrimitiveType.Quad );
-        
-        quad.GetComponent<Renderer>().material.mainTexture = tileSide; 
-        quad.transform.localScale = new Vector3(tileDimensions,tileDimensions,1);
-        quad.transform.Translate(x * tileDimensions, y * tileDimensions, z * tileDimensions);
-        
-        quad.GetComponent<MeshCollider>().enabled = false;
+        Vector3 newPos = new Vector3(x * tileDimensions, y * tileDimensions, z * tileDimensions);
+        Vector3 offset = new Vector3(0,0,0);
+        Vector3 rotation = new Vector3(0,0,0);
 
         if (side == Side.EAST) {
-            quad.transform.Translate(-tileDimensions/2, -tileDimensions/2,0);
-            quad.transform.Rotate(0,90,0, Space.Self);
+            offset = new Vector3(-tileDimensions/2, -tileDimensions/2,0);
+            rotation = new Vector3(0,90,0);
         } else if (side == Side.WEST) {
-            quad.transform.Translate(tileDimensions/2,-tileDimensions/2,0);
-            quad.transform.Rotate(0,-90,0, Space.Self);
+            offset = new Vector3(tileDimensions/2,-tileDimensions/2,0);
+            rotation = new Vector3(0,-90,0);
         } else if (side == Side.NORTH) {
-            quad.transform.Translate(0,-tileDimensions/2, -tileDimensions/2);
-            quad.transform.Rotate(0,0,0, Space.Self);
+            offset = new Vector3(0,-tileDimensions/2, -tileDimensions/2);
+            rotation = new Vector3(0,0,0);
         } else if (side == Side.SOUTH) {
-            quad.transform.Translate(0,-tileDimensions/2,tileDimensions/2);
-            quad.transform.Rotate(0,180,0, Space.Self);
+            offset = new Vector3(0,-tileDimensions/2,tileDimensions/2);
+            rotation = new Vector3(0,180,0);
         }
-        
-        quad.transform.parent = GameObject.Find("Tiles").transform;
+        newPos += offset;
+        CreateTile(newPos, rotation, tileSide, false);
     }
 
+    void CreateTile(Vector3 pos, Vector3 rotation, Texture texture, bool isTop) {
+        GameObject quad = GameObject.CreatePrimitive( PrimitiveType.Quad );
+        quad.isStatic = true;
+        quad.GetComponent<Renderer>().material.mainTexture = texture; 
+        quad.transform.localScale = new Vector3(tileDimensions,tileDimensions,1);
+        
+        quad.transform.Translate(pos);
+        quad.transform.Rotate(rotation, Space.Self);
+        quad.transform.parent = GameObject.Find("Tiles").transform;
+
+        if (isTop) quad.layer = 8;
+        else quad.GetComponent<MeshCollider>().enabled = false;
+    }
     int CalculateHeights(int x, int y)
     {
         float xCoord = (float) x / width * scale;
@@ -120,14 +177,15 @@ public class GenerateFloor : MonoBehaviour
         return flatten(Mathf.PerlinNoise(xCoord, yCoord));
     }
 
-    int flatten(float height) {
-        int temp = ((int)(height * 10));
-        int retval = 0;
-        if (temp <= 3) retval = 0;
-        else if (temp <= 6)  retval = 1;
-        else retval = 2;
+    int flatten(float h) {
+        int temp = ((int)(h * height));
+        // int retval = 0;
+        // if (temp <= 3) retval = 0;
+        // else if (temp <= 6)  retval = 1;
+        // else retval = 2;
 
-        return retval;
+        // return retval;
+        return temp;
     }
 
 }
