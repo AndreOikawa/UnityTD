@@ -64,28 +64,49 @@ public class GenerateFloor : MonoBehaviour
         int zEnd = length - 2;
 
         int prevY = -1;
+        bool first = true;
         for (int x = xStart; x <= xEnd; x++) {
             int y = HighestTop(x,zStart);
             if (prevY != y) {
+                
+                if (!first) {
+                    var prev = new Vector3(x-1,prevY+0.5f,zStart);
+                    CreateWaypoint(prev * tileDimensions);
+                    var pos = new Vector3(x,y + 0.5f,zStart);
+                    CreateWaypoint(pos * tileDimensions);
+                }
                 prevY = y;
-                CreateWaypoint(new Vector3Int(x,y + 1,zStart));
             }
+            first = false;
             tiles[x,y,zStart] = Top.PATH;
         }
+
+        first = true;
         for (int z = zStart; z <= zEnd; z++) {
             int y = HighestTop(xEnd,z);
-
             if (prevY != y) {
+                
+                if (!first) {
+                    var prev = new Vector3(xEnd,prevY+0.5f,z-1);
+                    CreateWaypoint(prev * tileDimensions);
+                    var pos = new Vector3(xEnd,y+0.5f,z);
+                    CreateWaypoint(pos * tileDimensions);
+                
+                }
                 prevY = y;
-                CreateWaypoint(new Vector3Int(xEnd,y + 1,z));
             }
-
+            first = false;
             tiles[xEnd,y,z] = Top.PATH;
         }
+
+        var last = new Vector3(xEnd, HighestTop(xEnd, zEnd) + 0.5f, zEnd);
+        CreateWaypoint(last * tileDimensions);
     }
 
-    void CreateWaypoint(Vector3Int pos) {
-        Instantiate(waypointPrefab, pos, Quaternion.identity);
+    void CreateWaypoint(Vector3 pos) {
+        var waypoint = Instantiate(waypointPrefab, pos, Quaternion.identity);
+        waypoint.transform.parent = GameObject.Find("Waypoints").transform;
+        Waypoint.AddWaypoint(waypoint.transform);
     }
     int HighestTop(int x, int z) {
         int y = height - 1;
