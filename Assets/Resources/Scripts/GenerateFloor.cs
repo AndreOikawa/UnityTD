@@ -7,14 +7,18 @@ public class GenerateFloor : MonoBehaviour
     enum Top {
         NOTHING,
         PATH,
-        GROUND
+        GROUND,
+        GENERATED
     }
     enum Side {
         NORTH,
         SOUTH,
         EAST,
-        WEST
+        WEST, 
+        GENERATED
     }
+
+    #region public vars
     public int tileDimensions = 2;
     public int width = 32;
     public int length = 32;
@@ -22,10 +26,14 @@ public class GenerateFloor : MonoBehaviour
     public float scale = 1.01f;
     public bool debug = false;
     public GameObject waypointPrefab;
+    #endregion
+    
+    #region private vars
     private Top[,,] tiles;
     private Texture tileTop;
     private Texture tileSide;
     private Texture tilePath;
+    #endregion
     void Awake()
     {
         PopulateTextures();
@@ -123,6 +131,7 @@ public class GenerateFloor : MonoBehaviour
         for (int y = height - 1; y >= 0; y--) {
             for (int x = 0; x < width; x++) {
                 for (int z = 0; z < length; z++) {
+                    
                     if (tiles[x,y,z] != Top.NOTHING) {
                         GenerateTop(x,y,z, tiles[x,y,z]);
                         // east

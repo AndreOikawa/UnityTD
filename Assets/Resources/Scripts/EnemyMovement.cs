@@ -11,6 +11,7 @@ public class EnemyMovement : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public float jumpHeight = 3f;
+    public float jumpEarlyDist = 2f;
     public LayerMask groundMask;
     bool isGrounded;
     
@@ -37,14 +38,7 @@ public class EnemyMovement : MonoBehaviour
         // if (debug) Debug.Log(transform.position);
         Vector3 xz = transform.position;
         xz.y = waypoints[current].position.y;
-        if (Vector3.Distance(xz, waypoints[current].position) < 0.4f) {
-            current++;
-            if (debug) Debug.Log(current);
-            if (current >= waypoints.Count) {
-                Destroy(gameObject);
-                // current = 0;
-            }
-        }
+        
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -76,6 +70,14 @@ public class EnemyMovement : MonoBehaviour
         //     if (debug) Debug.Log("outofbounds" + transform.position.y);
         //     transform.position = new Vector3(10,10,10);
         // }
+        if (Vector3.Distance(xz, waypoints[current].position) < 0.7f) {
+            current++;
+            if (debug) Debug.Log(current);
+            if (current >= waypoints.Count) {
+                Destroy(gameObject);
+                // current = 0;
+            }
+        }
         
     }
 }
