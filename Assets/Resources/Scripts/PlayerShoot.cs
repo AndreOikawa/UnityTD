@@ -11,6 +11,8 @@ public class PlayerShoot : MonoBehaviour
     private LayerMask mask;
     [SerializeField]
     private GameObject projectileObj;
+    [SerializeField]
+    private float bulletSpeed = 1000f;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,13 +28,15 @@ public class PlayerShoot : MonoBehaviour
     }
 
     void Shoot() {
-        RaycastHit hit;
-        float weaponRange = 100f;
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, weaponRange, mask)) {
-            Debug.Log("hit " + hit.collider.name);
-            var projectile = Instantiate(projectileObj, camera.transform.position, Quaternion.identity);
-            projectile.transform.parent = GameObject.Find("Projectiles").transform;
+        // RaycastHit hit;
+        // float weaponRange = 100f;
+        // if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, weaponRange, mask)) {
+        //     Debug.Log("hit " + hit.collider.name);
             
-        }
+            
+        // }
+        var projectile = Instantiate(projectileObj, camera.transform.position + camera.transform.forward * 2, Quaternion.identity);
+        projectile.GetComponent<Rigidbody>().AddForce(camera.transform.forward * bulletSpeed);
+        projectile.transform.parent = GameObject.Find("Projectiles").transform;
     }
 }

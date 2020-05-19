@@ -20,17 +20,7 @@ public class ProjectileMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 dir = transform.forward;
-        dir.y = 0;
-        // transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
-        // if (debug) Debug.Log(transform.position);
-        
-        controller.Move(dir.normalized * speed * Time.deltaTime);
 
-        velocity.y += gravity * Time.deltaTime;
-
-        controller.Move(velocity * Time.deltaTime);
-        // Debug.Log("moving");
     }
 
     //Detect collisions between the GameObjects with Colliders attached

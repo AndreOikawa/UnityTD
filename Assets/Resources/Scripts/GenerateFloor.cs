@@ -38,6 +38,19 @@ public class GenerateFloor : MonoBehaviour
     {
         PopulateTextures();
         GenerateTiles();
+        GenerateBoundary();
+    }
+    void GenerateBoundary() {
+        GameObject quad = GameObject.CreatePrimitive( PrimitiveType.Quad );
+        quad.isStatic = true;
+        // quad.GetComponent<Renderer>().material.mainTexture = texture; 
+        quad.transform.localScale = new Vector3(width * tileDimensions, length * tileDimensions,1);
+
+        Vector3 pos = new Vector3(width, -1, length);
+        Vector3 rotation = new Vector3(90,0,0);
+        quad.transform.Translate(pos);
+        quad.transform.Rotate(rotation, Space.Self);
+        quad.transform.parent = GameObject.Find("Boundary").transform;
 
     }
     void PopulateTextures() {
