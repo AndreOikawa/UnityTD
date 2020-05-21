@@ -121,18 +121,42 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!20 &182903353 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 1605610382959903720, guid: 3f86dbfddfa635e4198f344fb22bc64a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1859583252}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &182903356 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1605610382959903723, guid: 3f86dbfddfa635e4198f344fb22bc64a,
     type: 3}
   m_PrefabInstance: {fileID: 1859583252}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &584541360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 584541361}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &584541361
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584541360}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,6 +467,8 @@ MonoBehaviour:
   debug: 0
   waypointPrefab: {fileID: 957199211931074989, guid: 9d2994a2fc8f0a14b8aa859480f12811,
     type: 3}
+  enemySpawnerPrefab: {fileID: 7864309958640653129, guid: 74aee8612053e5a4eb2fa084d9c82e7d,
+    type: 3}
 --- !u!1 &1772139683
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,7 +586,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08db3e245e084e049a328a4453ef7aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 182903353}
   mask:
     serializedVersion: 2
     m_Bits: 4294967295

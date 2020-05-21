@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    [SerializeField]
+    // [SerializeField]
     private Camera camera;
 
     [SerializeField]
@@ -16,7 +16,7 @@ public class PlayerShoot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        camera = transform.GetComponentInChildren<Camera>();
     }
 
     // Update is called once per frame

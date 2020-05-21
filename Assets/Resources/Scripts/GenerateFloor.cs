@@ -26,6 +26,8 @@ public class GenerateFloor : MonoBehaviour
     public float scale = 1.01f;
     public bool debug = false;
     public GameObject waypointPrefab;
+    [SerializeField]
+    private GameObject enemySpawnerPrefab;
     #endregion
     
     #region private vars
@@ -33,6 +35,7 @@ public class GenerateFloor : MonoBehaviour
     private Texture tileTop;
     private Texture tileSide;
     private Texture tilePath;
+    
     #endregion
     void Awake()
     {
@@ -77,12 +80,20 @@ public class GenerateFloor : MonoBehaviour
 
         CreatePath();
     }
-
+    void CreateEnemySpawner(Vector3 pos) {
+        var enemySpawner = Instantiate(enemySpawnerPrefab, pos, Quaternion.identity);
+        enemySpawner.transform.parent = GameObject.Find("EnemySpawner").transform;
+        
+    }
     void CreatePath() {
         int xStart = 1;
         int zStart = 1;
         int xEnd = width - 2;
         int zEnd = length - 2;
+
+        var spawnPos = new Vector3(xStart, HighestTop(xStart,zStart), zStart);
+
+        CreateEnemySpawner(spawnPos * tileDimensions);
 
         int prevY = -1;
         bool first = true;
