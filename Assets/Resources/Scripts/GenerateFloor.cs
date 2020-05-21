@@ -85,54 +85,78 @@ public class GenerateFloor : MonoBehaviour
         enemySpawner.transform.parent = GameObject.Find("EnemySpawner").transform;
         
     }
+
+
+    
+    void MakePathLines(Vector2Int begin, Vector2Int end) {
+        Debug.Log("Begin: " + begin + " End: " + end);
+        int prevY = -1;
+        bool first = true;
+        
+        while (begin != end) {
+            int y = HighestTop(begin.x,begin.y);
+            if (prevY != y) {
+                if (!first) {
+                    var prev = new Vector3(begin.x,prevY+0.5f,begin.y);
+                    if (begin.x == end.x) {
+                        prev.z += (begin.y > end.y ? 1: -1);
+                    } else {
+                        prev.x += (begin.x > end.x ? 1: -1);
+                    }
+                    CreateWaypoint(prev * tileDimensions);
+                    var pos = new Vector3(begin.x,y + 0.5f,begin.y);
+                    CreateWaypoint(pos * tileDimensions);
+                }
+                prevY = y;
+                first = false;
+            }
+            tiles[begin.x,y,begin.y] = Top.PATH;
+            if (begin.x == end.x) {
+                begin.y += (begin.y > end.y ? - 1: 1);
+            } else {
+                begin.x += (begin.x > end.x ? - 1: 1);
+            }
+        }
+        int lasty = HighestTop(end.x, end.y);
+        var last = new Vector3(end.x, lasty + 0.5f, end.y);
+        tiles[end.x, lasty, end.y] = Top.PATH;
+        CreateWaypoint(last * tileDimensions);
+        
+        
+    }
     void CreatePath() {
-        int xStart = 1;
-        int zStart = 1;
-        int xEnd = width - 2;
-        int zEnd = length - 2;
+        int xStart = 4;
+        int zStart = 4;
+        int xEnd = width - 5;
+        int zEnd = length - 5;
 
         var spawnPos = new Vector3(xStart, HighestTop(xStart,zStart), zStart);
 
         CreateEnemySpawner(spawnPos * tileDimensions);
-
-        int prevY = -1;
-        bool first = true;
-        for (int x = xStart; x <= xEnd; x++) {
-            int y = HighestTop(x,zStart);
-            if (prevY != y) {
-                
-                if (!first) {
-                    var prev = new Vector3(x-1,prevY+0.5f,zStart);
-                    CreateWaypoint(prev * tileDimensions);
-                    var pos = new Vector3(x,y + 0.5f,zStart);
-                    CreateWaypoint(pos * tileDimensions);
-                }
-                prevY = y;
-            }
-            first = false;
-            tiles[x,y,zStart] = Top.PATH;
-        }
-
-        first = true;
-        for (int z = zStart; z <= zEnd; z++) {
-            int y = HighestTop(xEnd,z);
-            if (prevY != y) {
-                
-                if (!first) {
-                    var prev = new Vector3(xEnd,prevY+0.5f,z-1);
-                    CreateWaypoint(prev * tileDimensions);
-                    var pos = new Vector3(xEnd,y+0.5f,z);
-                    CreateWaypoint(pos * tileDimensions);
-                
-                }
-                prevY = y;
-            }
-            first = false;
-            tiles[xEnd,y,z] = Top.PATH;
-        }
-
-        var last = new Vector3(xEnd, HighestTop(xEnd, zEnd) + 0.5f, zEnd);
-        CreateWaypoint(last * tileDimensions);
+        Vector2Int start = new Vector2Int(xStart, zStart);
+        Vector2Int end = new Vector2Int(xEnd/2,zStart);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(xEnd/2, zEnd/2);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(xStart, zEnd/2);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(xStart, zEnd);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(3 * xEnd / 4, zEnd);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(3 * xEnd / 4, zStart);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(xEnd, zStart);
+        MakePathLines(start,end);
+        start = end;
+        end = new Vector2Int(xEnd, zEnd);
+        MakePathLines(start,end);
     }
 
     void CreateWaypoint(Vector3 pos) {

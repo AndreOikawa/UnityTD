@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  debug: 1
+  debug: 0
   controller: {fileID: 838680925416646783}
   groundCheck: {fileID: 838680925656369630}
   groundDistance: 0.4

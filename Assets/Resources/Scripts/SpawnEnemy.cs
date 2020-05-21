@@ -23,7 +23,7 @@ public class SpawnEnemy : MonoBehaviour
         time += Time.deltaTime;
         if (time > waveTimer) {
             var enemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-            enemy.transform.parent = GameObject.Find("Enemy").transform;
+            enemy.transform.parent = GameObject.Find("Enemies").transform;
             time = 0f;
             if (debug) Debug.Log("spawned");
         }
