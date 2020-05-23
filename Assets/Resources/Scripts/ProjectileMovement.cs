@@ -26,7 +26,11 @@ public class ProjectileMovement : MonoBehaviour
     //Detect collisions between the GameObjects with Colliders attached
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("hit: " + collision.gameObject.name);
+        // Debug.Log("hit: " + collision.gameObject.name);
+        if (collision.gameObject.name == "Enemy") {
+            // EnemyBattle enemyScript = (EnemyBattle)collision.gameObject.GetComponent(typeof(EnemyBattle));
+            // enemyScript.TakeDamage(10f);
+        }
         Destroy(gameObject);
     }
 }
