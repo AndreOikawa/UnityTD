@@ -14,15 +14,17 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField]
     private float bulletSpeed = 1000f;
     // Start is called before the first frame update
+    private PlayerVariables playerVariables;
     void Start()
     {
         camera = transform.GetComponentInChildren<Camera>();
+        playerVariables = GetComponent<PlayerVariables>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) {
+        if (Input.GetButtonDown("Fire1") && playerVariables.CurrentMode == PlayerVariables.ClickType.SHOOT) {
             Shoot();
         }
     }
