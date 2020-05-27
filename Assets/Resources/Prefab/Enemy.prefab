@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 838680924939249649}
   - component: {fileID: 838680924939249650}
   - component: {fileID: 838680924939249651}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 838680925416646783}
   - component: {fileID: 838680925416646768}
   - component: {fileID: 6043674590645158437}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14cc68d501d52ac4ea35df6fbbe3e00d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 20
   debug: 0
   controller: {fileID: 838680925416646783}
   groundCheck: {fileID: 838680925656369630}
@@ -193,7 +193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 838680925656369630}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 3781469392312458977}
   - component: {fileID: 9217850131245050813}
   - component: {fileID: 5686073337375821433}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 4674631956652923982}
   - component: {fileID: 4424243118805485761}
   - component: {fileID: 3835810609393200488}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Foreground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 1575239076361899030}
   - component: {fileID: 2400261839192560944}
   - component: {fileID: 2562524772466706127}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

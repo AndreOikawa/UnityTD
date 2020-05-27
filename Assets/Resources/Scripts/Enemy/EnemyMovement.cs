@@ -75,6 +75,7 @@ public class EnemyMovement : MonoBehaviour
             if (debug) Debug.Log(current);
             if (current >= waypoints.Count) {
                 Destroy(gameObject);
+                GameObject.Find("Player").GetComponent<PlayerVariables>().UpdateLives(1);
                 // current = 0;
             }
         }
